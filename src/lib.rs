@@ -4,6 +4,10 @@ use aws_sdk_dynamodb::Client;
 use serde;
 use serde_json;
 
+pub trait DataSource {
+    fn authenticate(&self);
+}
+
 pub struct DynamoDBClient<'a> {
     _table: &'a str,
     client: aws_sdk_dynamodb::Client,
@@ -35,8 +39,6 @@ impl DynamoDBClient<'_> {
 
         false
     }
-
-    // fn format<T: serde::Serialize>(&self, item: T) -> () {}
 
     fn format_value(value: serde_json::Value) -> Option<aws_sdk_dynamodb::model::AttributeValue> {
         match value {
