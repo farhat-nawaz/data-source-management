@@ -16,9 +16,13 @@ pub async fn start() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .service(web::scope("/api").service(endpoints::index::hello))
-            .service(web::scope("/bitbucket").service(endpoints::bitbucket::oauth))
-            .service(web::scope("/gitlab").service(endpoints::gitlab::oauth))
+            .service(
+                web::scope("/api")
+                    .service(endpoints::index::get_scoped_handlers())
+                    .service(endpoints::data_source::get_scoped_handlers()),
+            )
+            .service(web::scope("/bitbucket").service(endpoints::bitbucket::get_scoped_handlers()))
+            .service(web::scope("/gitlab").service(endpoints::gitlab::get_scoped_handlers()))
             .wrap(Logger::default())
         // .wrap(Logger::new("%a %T"))
     })
