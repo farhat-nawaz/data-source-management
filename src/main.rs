@@ -7,7 +7,7 @@ mod api {
 }
 
 mod data_source_endpoints {
-    mod bitbucket;
+    pub mod bitbucket;
 }
 
 #[derive(serde::Serialize)]
@@ -47,8 +47,9 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(api::index::hello)
+            .service(data_source_endpoints::bitbucket::oauth)
             .wrap(Logger::default())
-            .wrap(Logger::new("%a %T"))
+        // .wrap(Logger::new("%a %T"))
     })
     .workers(4)
     .bind(("127.0.0.1", 8080))?
