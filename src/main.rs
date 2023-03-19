@@ -1,6 +1,14 @@
-use actix_web::{get, middleware::Logger, HttpResponse, Responder};
+use actix_web::middleware::Logger;
 
 use data_source_management::DynamoDBClient;
+
+mod api {
+    pub mod index;
+}
+
+mod data_source_endpoints {
+    mod bitbucket;
+}
 
 #[derive(serde::Serialize)]
 struct DataSource {
@@ -29,11 +37,6 @@ async fn _main() {
     }
 }
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     use actix_web::{App, HttpServer};
@@ -43,9 +46,9 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .service(hello)
+            .service(api::index::hello)
             .wrap(Logger::default())
-            .wrap(Logger::new("%a %{User-Agent}i"))
+            .wrap(Logger::new("%a %T"))
     })
     .workers(4)
     .bind(("127.0.0.1", 8080))?
