@@ -1,4 +1,4 @@
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::{get, web, HttpResponse, Responder, Scope};
 
 #[get("/all")]
 async fn all() -> impl Responder {
@@ -23,7 +23,7 @@ async fn all_by_customer_uuid(info: web::Path<(String,)>) -> impl Responder {
     ))
 }
 
-pub fn get_scoped_handlers() -> actix_web::Scope {
+pub fn get_scoped_handlers() -> Scope {
     web::scope("/data-sources")
         .service(all)
         .service(one_by_uuid)

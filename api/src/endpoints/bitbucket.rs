@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::{get, web, HttpResponse, Responder, Scope};
 
 #[get("/oauth")]
 async fn oauth(query_params: web::Query<HashMap<String, String>>) -> impl Responder {
@@ -13,6 +13,6 @@ async fn oauth(query_params: web::Query<HashMap<String, String>>) -> impl Respon
     HttpResponse::Ok().body("New Bitbucket source created successfully!")
 }
 
-pub fn get_scoped_handlers() -> actix_web::Scope {
+pub fn get_scoped_handlers() -> Scope {
     web::scope("/bitbucket").service(oauth)
 }
