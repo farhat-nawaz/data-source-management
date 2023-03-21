@@ -1,1 +1,5 @@
+# Directories
 /target
+
+# Files
+.env
