@@ -1,12 +1,8 @@
 use std::collections::HashMap;
 
+use super::super::AppState;
 use actix_web::{get, web, HttpResponse, Responder, Scope};
-use utils::sea_orm::{Database, DatabaseConnection};
-
-#[derive(Debug, Clone)]
-struct AppState {
-    conn: DatabaseConnection,
-}
+use utils::{BitbucketDataSource, DataSource};
 
 #[get("/oauth")]
 async fn oauth(
@@ -17,8 +13,19 @@ async fn oauth(
         return HttpResponse::BadRequest().body("`code` parameter is required");
     }
 
-    let _code = query_params["code"].to_owned();
+    let code = query_params["code"].to_owned();
     let conn = &data.conn;
+
+    let properties = HashMap::from([
+        ("name".to_owned(), "Test".to_owned()),
+        ("authentication_type".to_owned(), "app".to_owned()),
+        ("data_source_type".to_owned(), "gitlab".to_owned()),
+        ("oauth_authorization_code".to_owned(), code),
+    ]);
+
+    if let None = BitbucketDataSource::create(conn, properties).await {
+        return HttpResponse::Ok().body("Could not create new source!");
+    }
 
     HttpResponse::Ok().body("New Bitbucket source created successfully!")
 }

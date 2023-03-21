@@ -4,7 +4,7 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel, Deserialize, Serialize)]
-#[sea_orm(table_name = "data_sources")]
+#[sea_orm(table_name = "data_sources_rust")]
 pub struct Model {
     #[sea_orm(primary_key)]
     #[serde(skip_deserializing)]

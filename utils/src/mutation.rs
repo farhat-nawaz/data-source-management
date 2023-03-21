@@ -9,7 +9,7 @@ impl Mutation {
     pub async fn create_data_source(
         db: &DbConn,
         data: HashMap<String, String>,
-    ) -> Result<data_source::ActiveModel, DbErr> {
+    ) -> Result<data_source::Model, DbErr> {
         data_source::ActiveModel {
             uuid: Set(data["uuid"].to_owned()),
             name: Set(data["name"].to_owned()),
@@ -17,7 +17,7 @@ impl Mutation {
             data_source_type: Set(data["data_source_type"].to_owned()),
             // properties: data["properties"],
         }
-        .save(db)
+        .insert(db)
         .await
     }
 }

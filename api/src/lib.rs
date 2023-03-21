@@ -36,7 +36,7 @@ pub async fn start() -> std::io::Result<()> {
                     .service(endpoints::index::get_scoped_handlers())
                     .service(endpoints::data_source::get_scoped_handlers()),
             )
-            .service(web::scope("/bitbucket").service(endpoints::bitbucket::get_scoped_handlers()))
+            .service(endpoints::bitbucket::get_scoped_handlers())
             .service(web::scope("/gitlab").service(endpoints::gitlab::get_scoped_handlers()))
             .app_data(web::Data::new(state.clone()))
             .wrap(Logger::default())

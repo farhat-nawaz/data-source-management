@@ -71,7 +71,7 @@ impl DataSource<BitbucketDataSource> for BitbucketDataSource {
 
         properties.insert("uuid".to_string(), uuid.to_string());
         properties.insert("access_token".to_string(), access_token);
-        properties.insert("refrresh_token".to_string(), refrresh_token);
+        properties.insert("refresh_token".to_string(), refrresh_token);
 
         let data_source = Self::new(properties)?;
 
