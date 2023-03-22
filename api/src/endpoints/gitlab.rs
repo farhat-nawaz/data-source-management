@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use super::super::AppState;
+use super::super::{AppState, Response};
 use actix_web::{get, web, HttpResponse, Responder, Scope};
-use utils::{BitbucketDataSource, DataSource};
+use utils::{DataSource, GitlabDataSource};
 
 #[get("/oauth")]
 async fn oauth(
@@ -15,19 +15,15 @@ async fn oauth(
 
     let code = query_params["code"].to_owned();
     let conn = &data.conn;
+    let mut success = true;
+    let mut message = "New Gitlab source created successfully!";
 
-    let properties = HashMap::from([
-        ("name".to_owned(), "Test".to_owned()),
-        ("authentication_type".to_owned(), "app".to_owned()),
-        ("data_source_type".to_owned(), "gitlab".to_owned()),
-        ("oauth_authorization_code".to_owned(), code),
-    ]);
-
-    if let None = BitbucketDataSource::create(conn, properties).await {
-        return HttpResponse::Ok().body("Could not create new source!");
+    if let None = GitlabDataSource::create(conn, "Test".to_owned(), code.to_owned()).await {
+        success = false;
+        message = "Could not create new source!";
     }
 
-    HttpResponse::Ok().body("New Bitbucket source created successfully!")
+    HttpResponse::Ok().json(Response { success, message })
 }
 
 pub fn get_scoped_handlers() -> Scope {

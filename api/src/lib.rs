@@ -1,14 +1,7 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 use std::env;
 
-use actix_web::middleware::Logger;
-use actix_web::web;
-
+use serde::Serialize;
 use utils::sea_orm::{Database, DatabaseConnection};
-
 mod endpoints;
 
 #[derive(Debug, Clone)]
@@ -16,18 +9,26 @@ pub struct AppState {
     conn: DatabaseConnection,
 }
 
+#[derive(Serialize)]
+pub struct Response<'a> {
+    success: bool,
+    message: &'a str,
+}
+
 #[actix_web::main]
 pub async fn start() -> std::io::Result<()> {
+    use actix_web::middleware::Logger;
+    use actix_web::web;
     use actix_web::{App, HttpServer};
+    use dotenv;
     use env_logger;
 
-    dotenvy::dotenv().ok();
+    dotenv::dotenv().ok();
     let db_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+    let conn = Database::connect(&db_url).await.unwrap();
+    let state = AppState { conn };
 
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("debug"));
-    let conn = Database::connect(&db_url).await.unwrap();
-
-    let state = AppState { conn };
 
     HttpServer::new(move || {
         App::new()
@@ -46,15 +47,4 @@ pub async fn start() -> std::io::Result<()> {
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
 }
