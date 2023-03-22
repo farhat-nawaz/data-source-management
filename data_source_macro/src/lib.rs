@@ -16,7 +16,7 @@ enum _AuthenticationType {
 }
 
 #[async_trait]
-pub trait DataSource<T> {
+pub trait DataSource<T: DataSourceMeta> {
     fn as_persist_hashmap(&self) -> HashMap<&str, String>;
     fn authenticate(&mut self);
 
@@ -40,6 +40,10 @@ pub trait DataSource<T> {
     // fn toggle_active(&mut self) {
     //     self.is_active = !self.is_active;
     // }
+}
+
+pub trait DataSourceMeta {
+    fn fields() -> Vec<&'static str>;
 }
 
 pub trait OAuth {

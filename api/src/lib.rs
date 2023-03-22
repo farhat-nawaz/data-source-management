@@ -1,36 +1,12 @@
+mod data_sources;
+mod endpoints;
+
 use std::env;
 
 use actix_web::{body::BoxBody, HttpRequest, HttpResponse, Responder};
+pub use data_sources::{BitbucketDataSource, DataSource, GitlabDataSource};
 use serde::Serialize;
 use utils::sea_orm::{Database, DatabaseConnection};
-mod endpoints;
-
-use data_source_macro::async_trait;
-use data_source_macro::{uuid, DataSource, OAuth};
-use data_source_macro_derive::{DataSource, OAuth};
-use utils::Mutation;
-
-use std::collections::HashMap;
-
-#[derive(OAuth, DataSource)]
-pub struct BitbucketDataSource {
-    uuid: String,
-    name: String,
-    authentication_type: String,
-    data_source_type: String,
-    access_token: String,
-    refresh_token: String,
-}
-
-#[derive(OAuth, DataSource)]
-pub struct GitlabDataSource {
-    uuid: String,
-    name: String,
-    authentication_type: String,
-    data_source_type: String,
-    access_token: String,
-    refresh_token: String,
-}
 
 #[derive(Debug, Clone)]
 pub struct AppState {
