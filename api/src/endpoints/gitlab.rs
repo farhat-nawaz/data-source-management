@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use super::super::{AppState, Response};
-use actix_web::{get, web, HttpResponse, Responder, Scope};
+use actix_web::{get, web, Responder, Scope};
 use utils::{DataSource, GitlabDataSource};
 
 #[get("/oauth")]
@@ -10,20 +10,25 @@ async fn oauth(
     data: web::Data<AppState>,
 ) -> impl Responder {
     if !query_params.contains_key("code") {
-        return HttpResponse::BadRequest().body("`code` parameter is required");
+        return prepare_response(400, false, "`code` parameter is required");
     }
 
     let code = query_params["code"].to_owned();
     let conn = &data.conn;
-    let mut success = true;
-    let mut message = "New Gitlab source created successfully!";
 
     if let None = GitlabDataSource::create(conn, "Test".to_owned(), code.to_owned()).await {
-        success = false;
-        message = "Could not create new source!";
+        return prepare_response(200, false, "Could not create new source!");
     }
 
-    HttpResponse::Ok().json(Response { success, message })
+    prepare_response(200, true, "New Gitlab source created successfully!")
+}
+
+fn prepare_response(status_code: i32, success: bool, message: &str) -> Response {
+    Response {
+        status_code,
+        success,
+        message,
+    }
 }
 
 pub fn get_scoped_handlers() -> Scope {

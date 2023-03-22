@@ -62,21 +62,13 @@ impl OAuth for GitlabDataSource {
 
 #[async_trait]
 impl DataSource<BitbucketDataSource> for BitbucketDataSource {
-    fn as_persist_hashmap(&self) -> HashMap<String, String> {
-        let data = [
-            ("uuid".to_owned(), self.uuid.to_owned()),
-            ("name".to_owned(), self.name.to_owned()),
-            (
-                "authentication_type".to_owned(),
-                self.authentication_type.to_owned(),
-            ),
-            (
-                "data_source_type".to_owned(),
-                self.data_source_type.to_owned(),
-            ),
-            // ("uuid".to_owned(), self.uuid.to_owned()),
-        ];
-        HashMap::from(data)
+    fn as_persist_hashmap(&self) -> HashMap<&str, String> {
+        HashMap::from([
+            ("uuid", self.uuid.clone()),
+            ("name", self.name.clone()),
+            ("authentication_type", self.authentication_type.clone()),
+            ("data_source_type", self.data_source_type.clone()),
+        ])
     }
     fn authenticate(&mut self) {
         self.access_token = self.refresh_token();
@@ -132,20 +124,13 @@ impl DataSource<BitbucketDataSource> for BitbucketDataSource {
 
 #[async_trait]
 impl DataSource<GitlabDataSource> for GitlabDataSource {
-    fn as_persist_hashmap(&self) -> HashMap<String, String> {
-        let data = [
-            ("uuid".to_owned(), self.uuid.to_owned()),
-            ("name".to_owned(), self.name.to_owned()),
-            (
-                "authentication_type".to_owned(),
-                self.authentication_type.to_owned(),
-            ),
-            (
-                "data_source_type".to_owned(),
-                self.data_source_type.to_owned(),
-            ),
-        ];
-        HashMap::from(data)
+    fn as_persist_hashmap(&self) -> HashMap<&str, String> {
+        HashMap::from([
+            ("uuid", self.uuid.clone()),
+            ("name", self.name.clone()),
+            ("authentication_type", self.authentication_type.clone()),
+            ("data_source_type", self.data_source_type.clone()),
+        ])
     }
     fn authenticate(&mut self) {
         self.access_token = self.refresh_token();
@@ -201,7 +186,7 @@ impl DataSource<GitlabDataSource> for GitlabDataSource {
 
 #[async_trait]
 pub trait DataSource<T> {
-    fn as_persist_hashmap(&self) -> HashMap<String, String>;
+    fn as_persist_hashmap(&self) -> HashMap<&str, String>;
     fn authenticate(&mut self);
 
     async fn create(

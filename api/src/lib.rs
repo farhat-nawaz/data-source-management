@@ -1,5 +1,6 @@
 use std::env;
 
+use actix_web::{body::BoxBody, HttpRequest, HttpResponse, Responder};
 use serde::Serialize;
 use utils::sea_orm::{Database, DatabaseConnection};
 mod endpoints;
@@ -11,8 +12,21 @@ pub struct AppState {
 
 #[derive(Serialize)]
 pub struct Response<'a> {
+    status_code: i32,
     success: bool,
     message: &'a str,
+}
+
+impl Responder for Response<'_> {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
+        match self.status_code {
+            200 => HttpResponse::Ok().json(self),
+            400 => HttpResponse::BadRequest().json(self),
+            _ => HttpResponse::Unauthorized().json(self),
+        }
+    }
 }
 
 #[actix_web::main]

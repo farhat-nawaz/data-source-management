@@ -8,8 +8,14 @@ pub struct Mutation;
 impl Mutation {
     pub async fn create_data_source(
         db: &DbConn,
-        data: HashMap<String, String>,
+        data: HashMap<&str, String>,
     ) -> Result<data_source::Model, DbErr> {
+        // let data_source: data_source::ActiveModel = data.iter()
+        // .map(|(k, v)| (k.as_str(), v.as_str()))
+        // .collect::<Vec<_>>()
+        // .try_into()
+        // .unwrap();
+
         data_source::ActiveModel {
             uuid: Set(data["uuid"].to_owned()),
             name: Set(data["name"].to_owned()),
