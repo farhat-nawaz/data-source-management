@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 
-use super::super::{AppState, Response};
+use super::super::{AppState, BitbucketDataSource, DataSource, Response};
 use actix_web::{get, web, Responder, Scope};
-use utils::{DataSource, GitlabDataSource};
 
 #[get("/oauth")]
 async fn oauth(
@@ -16,7 +15,7 @@ async fn oauth(
     let code = query_params["code"].to_owned();
     let conn = &data.conn;
 
-    if let None = GitlabDataSource::create(conn, "Test".to_owned(), code.to_owned()).await {
+    if let None = BitbucketDataSource::create(conn, "Test".to_owned(), code.to_owned()).await {
         return prepare_response(200, false, "Could not create new source!");
     }
 

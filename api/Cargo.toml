@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
+data_source_macro = { path = "../data_source_macro" }
+data_source_macro_derive = { path = "../data_source_macro/data_source_macro_derive" }
 dotenv = "0.15.0"
 env_logger = "0.10.0"
 serde = { version = "1.0", features = ["derive"] }

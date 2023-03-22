@@ -262,6 +262,8 @@ name = "api"
 version = "0.1.0"
 dependencies = [
  "actix-web",
+ "data_source_macro",
+ "data_source_macro_derive",
  "dotenv",
  "env_logger",
  "serde",
@@ -658,6 +660,23 @@ dependencies = [
  "api",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "data_source_macro"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "entity",
+ "uuid",
+]
+
+[[package]]
+name = "data_source_macro_derive"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn 1.0.109",
 ]
 
 [[package]]

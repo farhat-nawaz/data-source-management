@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 
-use super::super::{AppState, Response};
+use super::super::{AppState, DataSource, GitlabDataSource, Response};
 use actix_web::{get, web, Responder, Scope};
-use utils::{DataSource, GitlabDataSource};
 
 #[get("/oauth")]
 async fn oauth(
